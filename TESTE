@@ -1,0 +1,217 @@
+1. Testar rota pública: Status
+Método
+GET
+URL
+http://localhost:8081/status
+Authorization
+No Auth
+Resultado esperado
+API Eco Power funcionando!
+2. Cadastrar usuário
+Método
+POST
+URL
+http://localhost:8081/auth/register
+Authorization
+No Auth
+Body → raw → JSON
+{
+  "nome": "Davi",
+  "email": "teste@email.com",
+  "senha": "123456"
+}
+Resultado esperado
+
+Se for novo usuário:
+
+{
+  "id": 1,
+  "nome": "Davi",
+  "email": "teste@email.com",
+  "senha": "$2a$10$...",
+  "role": "USER"
+}
+
+Se já existir:
+
+E-mail já cadastrado!
+3. Fazer login
+Método
+POST
+URL
+http://localhost:8081/auth/login
+Authorization
+No Auth
+Body → raw → JSON
+{
+  "email": "teste@email.com",
+  "senha": "123456"
+}
+Resultado esperado
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9..."
+}
+
+Copie esse token.
+
+4. Testar rota privada SEM token
+
+Agora teste uma rota privada sem autenticação.
+
+Método
+GET
+URL
+http://localhost:8081/ocorrencias
+Authorization
+No Auth
+Resultado esperado
+403 Forbidden
+
+ou
+
+401 Unauthorized
+
+Isso prova que a rota está protegida.
+
+5. Testar rota privada COM token
+
+Agora vá em:
+
+Authorization
+
+Em Auth Type, escolha:
+
+Bearer Token
+
+Cole o token que veio no login.
+
+Método
+GET
+URL
+http://localhost:8081/ocorrencias
+Resultado esperado
+
+Se não tiver ocorrências:
+
+[]
+
+Se tiver:
+
+[
+  {
+    "id": 1,
+    "titulo": "Esgoto a céu aberto",
+    "descricao": "Esgoto vazando próximo à calçada",
+    "endereco": "Rua das Flores",
+    "bairro": "Jardim Paulista",
+    "categoria": "Esgoto",
+    "prioridade": "Alta",
+    "status": "Aberto"
+  }
+]
+6. Criar ocorrência
+Método
+POST
+URL
+http://localhost:8081/ocorrencias
+Authorization
+Bearer Token
+Body → raw → JSON
+{
+  "titulo": "Esgoto a céu aberto",
+  "descricao": "Esgoto vazando próximo à calçada",
+  "endereco": "Rua das Flores",
+  "bairro": "Jardim Paulista",
+  "categoria": "Esgoto",
+  "prioridade": "Alta",
+  "status": "Aberto"
+}
+Resultado esperado
+{
+  "id": 1,
+  "titulo": "Esgoto a céu aberto",
+  "descricao": "Esgoto vazando próximo à calçada",
+  "endereco": "Rua das Flores",
+  "bairro": "Jardim Paulista",
+  "categoria": "Esgoto",
+  "prioridade": "Alta",
+  "status": "Aberto"
+}
+
+Guarde o id.
+
+7. Buscar ocorrência por ID
+Método
+GET
+URL
+http://localhost:8081/ocorrencias/1
+
+Troque o 1 pelo ID que apareceu no cadastro.
+
+Authorization
+Bearer Token
+Resultado esperado
+
+Retorna apenas aquela ocorrência.
+
+8. Editar ocorrência
+Método
+PUT
+URL
+http://localhost:8081/ocorrencias/1
+Authorization
+Bearer Token
+Body → raw → JSON
+{
+  "titulo": "Esgoto a céu aberto",
+  "descricao": "Equipe enviada ao local",
+  "endereco": "Rua das Flores",
+  "bairro": "Jardim Paulista",
+  "categoria": "Esgoto",
+  "prioridade": "Alta",
+  "status": "Em andamento"
+}
+Resultado esperado
+{
+  "id": 1,
+  "titulo": "Esgoto a céu aberto",
+  "descricao": "Equipe enviada ao local",
+  "endereco": "Rua das Flores",
+  "bairro": "Jardim Paulista",
+  "categoria": "Esgoto",
+  "prioridade": "Alta",
+  "status": "Em andamento"
+}
+9. Deletar ocorrência
+Método
+DELETE
+URL
+http://localhost:8081/ocorrencias/1
+Authorization
+Bearer Token
+Resultado esperado
+Ocorrência removida com sucesso!
+
+Depois teste:
+
+GET http://localhost:8081/ocorrencias
+
+A ocorrência deletada não deve aparecer mais.
+
+10. Listar usuários
+Método
+GET
+URL
+http://localhost:8081/usuarios
+Authorization
+Bearer Token
+Resultado esperado
+[
+  {
+    "id": 1,
+    "nome": "Davi",
+    "email": "teste@email.com",
+    "senha": "$2a$10$...",
+    "role": "USER"
+  }
+]

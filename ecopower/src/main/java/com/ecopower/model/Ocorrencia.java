@@ -12,7 +12,9 @@ public class Ocorrencia {
     private String titulo;
     private String descricao;
     private String endereco;
+    private String bairro;
     private String categoria;
+    private String prioridade;
     private String status;
 
     public Long getId() {

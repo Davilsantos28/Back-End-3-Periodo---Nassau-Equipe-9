@@ -1,7 +1,7 @@
 package com.ecopower.controller;
 
 import com.ecopower.model.Ocorrencia;
-import com.ecopower.repository.OcorrenciaRepository;
+import com.ecopower.service.OcorrenciaService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,48 +9,37 @@ import java.util.List;
 @RestController
 public class OcorrenciaController {
 
-    private final OcorrenciaRepository repository;
+    private final OcorrenciaService service;
 
-    public OcorrenciaController(OcorrenciaRepository repository) {
-        this.repository = repository;
+    public OcorrenciaController(OcorrenciaService service) {
+        this.service = service;
     }
 
     @GetMapping("/ocorrencias")
     public List<Ocorrencia> listar() {
-        return repository.findAll();
+        return service.listar();
     }
 
     @GetMapping("/ocorrencias/{id}")
     public Ocorrencia buscarPorId(@PathVariable Long id) {
-        return repository.findById(id).orElse(null);
+        return service.buscarPorId(id);
     }
 
     @PostMapping("/ocorrencias")
     public Ocorrencia criar(@RequestBody Ocorrencia ocorrencia) {
-        return repository.save(ocorrencia);
+        return service.criar(ocorrencia);
     }
 
     @PutMapping("/ocorrencias/{id}")
-    public Ocorrencia atualizar(@PathVariable Long id, @RequestBody Ocorrencia novaOcorrencia) {
+    public Ocorrencia atualizar(@PathVariable Long id,
+                                @RequestBody Ocorrencia ocorrencia) {
 
-        Ocorrencia ocorrencia = repository.findById(id).orElse(null);
-
-        if (ocorrencia == null) {
-            return null;
-        }
-
-        ocorrencia.setTitulo(novaOcorrencia.getTitulo());
-        ocorrencia.setDescricao(novaOcorrencia.getDescricao());
-        ocorrencia.setEndereco(novaOcorrencia.getEndereco());
-        ocorrencia.setCategoria(novaOcorrencia.getCategoria());
-        ocorrencia.setStatus(novaOcorrencia.getStatus());
-
-        return repository.save(ocorrencia);
+        return service.atualizar(id, ocorrencia);
     }
 
     @DeleteMapping("/ocorrencias/{id}")
     public String deletar(@PathVariable Long id) {
-        repository.deleteById(id);
+        service.deletar(id);
         return "Ocorrência removida com sucesso!";
     }
 }
